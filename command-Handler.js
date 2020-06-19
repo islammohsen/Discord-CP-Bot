@@ -1,3 +1,7 @@
+const { JSDOM } = require("jsdom");
+const { window } = new JSDOM("");
+const $ = require("jquery")(window);
+
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 bot.login(process.env.token);
@@ -28,6 +32,32 @@ class CommandHandler {
   };
   static onMessage_ping = (message, args) => {
     message.reply("pong!");
+  };
+  static onMessage_next_round = (message, args) => {
+    $.getJSON("https://codeforces.com/api/contest.list", (data) => {
+      if (data.status == "OK") {
+        data = data.result;
+        let next_contest = null;
+        let time = Number.MIN_SAFE_INTEGER;
+        data
+          .filter((element) => element.phase == "BEFORE")
+          .forEach((element) => {
+            if (element.relativeTimeSeconds > time)
+              (next_contest = element), (time = element.relativeTimeSeconds);
+          });
+        if (next_contest) {
+          time = -time;
+          hour = Math.floor(time / (60 * 60));
+          time -= hour * 60 * 60;
+          minute = Math.floor(time / 60);
+          time -= minute * 60;
+          second = time;
+          message.reply(
+            `Next contest is ${next_contest.name} and starts in ${hour}:${minute}:${second}`
+          );
+        } else message.reply("There is no available contests");
+      }
+    });
   };
 }
 
