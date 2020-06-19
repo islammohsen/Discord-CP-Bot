@@ -26,6 +26,9 @@ class CommandHandler {
   static onMessage_hello = (message, args) => {
     message.reply("Hello world!");
   };
+  static onMessage_ping = (message, args) => {
+    message.reply("pong!");
+  };
 }
 
 module.exports = CommandHandler;
