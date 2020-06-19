@@ -5,7 +5,8 @@ const $ = require("jquery")(window);
 const Discord = require("discord.js");
 const { data } = require("jquery");
 const bot = new Discord.Client();
-bot.login(process.env.token);
+// bot.login(process.env.token);
+bot.login("NzIzMzQ1MzE4MDcwMTkwMTAx.Xu0k-w.6e3aqnabz-BFhggyeVlo5AV4JW4");
 
 const version = "1.0.0";
 
@@ -20,6 +21,42 @@ getHelpEmbed = () => {
       "Bot tells you the next round, start time and contest link"
     );
 };
+
+getFormatedTime = (time) => {
+  let hour = Math.floor(time / (60 * 60));
+  time -= hour * 60 * 60;
+  let minute = Math.floor(time / 60);
+  time -= minute * 60;
+  let second = time;
+  return { hour: hour, minute: minute, second: second };
+};
+
+function timeConverter(UNIX_timestamp) {
+  var a = new Date(UNIX_timestamp * 1000);
+  var months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time =
+    date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec;
+  return time;
+}
 
 class CommandHandler {
   static isValidCommandName(name) {
@@ -60,32 +97,50 @@ class CommandHandler {
               (next_contest = element), (time = element.relativeTimeSeconds);
           });
         if (next_contest) {
-          time = -time;
-          let hour = Math.floor(time / (60 * 60));
-          time -= hour * 60 * 60;
-          let minute = Math.floor(time / 60);
-          time -= minute * 60;
-          let second = time;
+          time = getFormatedTime(-time);
           message.reply(
-            `Next contest is ${next_contest.name} , starts in ${hour}:${minute}:${second}, https://codeforces.com/contests/${next_contest.id}`
+            `Next contest is ${next_contest.name} , starts in ${time.hour}:${time.minute}:${time.second}, https://codeforces.com/contests/${next_contest.id}`
           );
         } else message.reply("There is no available contests");
       }
     });
   };
   static onMessage_stalk = (message, args) => {
-    if (args.length != 1) return message.reply("invalid arguments");
+    if (args.length != 1 && args.length != 2)
+      return message.reply("invalid arguments");
+    let count = 5;
+    if (args.length == 2) {
+      count = parseInt(args[1]);
+      if (count == NaN) return message.reply("Please enter a number");
+      if (count > 20) return message.reply("3aiz tmwtny ya islam :(");
+    }
     $.getJSON(
-      `https://codeforces.com/api/user.status?handle=${args[0]}n&from=1&count=5`,
+      `https://codeforces.com/api/user.status?handle=${args[0]}&from=1&count=${count}`,
       (data) => {
         if (data.status == "OK") {
           data = data.result;
-          let embed = new Discord().MessageEmbed().setTitle(args[0]);
+          let embed = new Discord.MessageEmbed().setTitle(args[0]);
+          let counter = 0;
           data.forEach((submission) => {
-            embed = embed.addField("Problem name", submission.problem.name);
+            counter++;
+            embed = embed.addField(
+              "Problem name",
+              submission.problem.name,
+              true
+            );
             embed = embed.addField("Verdict", submission.verdict, true);
+            embed = embed.addField(
+              "Time",
+              timeConverter(submission.creationTimeSeconds),
+              true
+            );
+            if (counter == 8) {
+              message.reply(embed);
+              counter = 0;
+              embed = new Discord.MessageEmbed().setTitle(args[0]);
+            }
           });
-          message.reply(embed);
+          if (counter > 0) message.reply(embed);
         } else message.reply("Error!");
       }
     );
