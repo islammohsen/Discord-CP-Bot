@@ -59,6 +59,9 @@ class CommandHandler {
       }
     });
   };
+  static onMessage_ching = (message, args) => {
+    message.reply("chong!");
+  };
 }
 
 module.exports = CommandHandler;
