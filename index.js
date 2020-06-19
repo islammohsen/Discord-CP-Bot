@@ -2,8 +2,7 @@ const Discord = require("discord.js");
 const CommandHandler = require("./command-Handler");
 
 const bot = new Discord.Client();
-// bot.login(process.env.token);
-bot.login("NzIzMzQ1MzE4MDcwMTkwMTAx.Xu0k-w.6e3aqnabz-BFhggyeVlo5AV4JW4");
+bot.login(process.env.token);
 
 const PREFIX = "!";
 
