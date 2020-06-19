@@ -7,7 +7,7 @@ const bot = new Discord.Client();
 bot.login(process.env.token);
 
 const version = "1.0.0";
-const guildId = "719559077772001280";
+const guildId = "694669879273324597";
 
 //Helpers functions
 class CommandHandler {
