@@ -7,9 +7,16 @@ const bot = new Discord.Client();
 bot.login(process.env.token);
 
 const version = "1.0.0";
-const guildId = "694669879273324597";
 
 //Helpers functions
+getHelpEmbed = () => {
+  return new Discord.MessageEmbed()
+    .setTitle("Commands")
+    .addField("!ping", "A command just for testing")
+    .addField("!chong", "A command 34an 5atr zula")
+    .addField("!next_round", "Bot tells you the next round and start time");
+};
+
 class CommandHandler {
   static isValidCommandName(name) {
     for (var l in this)
@@ -27,9 +34,6 @@ class CommandHandler {
       return true;
     } else return false;
   }
-  static onMessage_hello = (message, args) => {
-    message.reply("Hello world!");
-  };
   static onMessage_ping = (message, args) => {
     message.reply("pong!");
   };
@@ -61,6 +65,9 @@ class CommandHandler {
   };
   static onMessage_ching = (message, args) => {
     message.reply("chong!");
+  };
+  static onMessage_help = (message, args) => {
+    message.reply(getHelpEmbed());
   };
 }
 
