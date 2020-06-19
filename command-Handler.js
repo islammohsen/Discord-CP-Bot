@@ -3,6 +3,7 @@ const { window } = new JSDOM("");
 const $ = require("jquery")(window);
 
 const Discord = require("discord.js");
+const { data } = require("jquery");
 const bot = new Discord.Client();
 bot.login(process.env.token);
 
@@ -40,6 +41,12 @@ class CommandHandler {
   static onMessage_ping = (message, args) => {
     message.reply("pong!");
   };
+  static onMessage_ching = (message, args) => {
+    message.reply("chong!");
+  };
+  static onMessage_help = (message, args) => {
+    message.reply(getHelpEmbed());
+  };
   static onMessage_next_round = (message, args) => {
     $.getJSON("https://codeforces.com/api/contest.list", (data) => {
       if (data.status == "OK") {
@@ -66,11 +73,22 @@ class CommandHandler {
       }
     });
   };
-  static onMessage_ching = (message, args) => {
-    message.reply("chong!");
-  };
-  static onMessage_help = (message, args) => {
-    message.reply(getHelpEmbed());
+  static onMessage_stalk = (message, args) => {
+    if (args.length != 1) return message.reply("invalid arguments");
+    $.getJSON(
+      `https://codeforces.com/api/user.status?handle=${args[0]}n&from=1&count=5`,
+      (data) => {
+        if (data.status == "OK") {
+          data = data.result;
+          let embed = new Discord().MessageEmbed().setTitle(args[0]);
+          data.forEach((submission) => {
+            embed = embed.addField("Problem name", submission.problem.name);
+            embed = embed.addField("Verdict", submission.verdict, true);
+          });
+          message.reply(embed);
+        } else message.reply("Error!");
+      }
+    );
   };
 }
 
