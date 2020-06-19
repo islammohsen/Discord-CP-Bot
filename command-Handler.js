@@ -14,7 +14,10 @@ getHelpEmbed = () => {
     .setTitle("Commands")
     .addField("!ping", "A command just for testing")
     .addField("!chong", "A command 34an 5atr zula")
-    .addField("!next_round", "Bot tells you the next round and start time");
+    .addField(
+      "!next_round",
+      "Bot tells you the next round, start time and contest link"
+    );
 };
 
 class CommandHandler {
@@ -57,7 +60,7 @@ class CommandHandler {
           time -= minute * 60;
           let second = time;
           message.reply(
-            `Next contest is ${next_contest.name} and starts in ${hour}:${minute}:${second}`
+            `Next contest is ${next_contest.name} , starts in ${hour}:${minute}:${second}, https://codeforces.com/contests/${next_contest.id}`
           );
         } else message.reply("There is no available contests");
       }
