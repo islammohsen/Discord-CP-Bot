@@ -47,11 +47,11 @@ class CommandHandler {
           });
         if (next_contest) {
           time = -time;
-          hour = Math.floor(time / (60 * 60));
+          let hour = Math.floor(time / (60 * 60));
           time -= hour * 60 * 60;
-          minute = Math.floor(time / 60);
+          let minute = Math.floor(time / 60);
           time -= minute * 60;
-          second = time;
+          let second = time;
           message.reply(
             `Next contest is ${next_contest.name} and starts in ${hour}:${minute}:${second}`
           );
