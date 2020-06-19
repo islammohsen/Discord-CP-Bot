@@ -15,10 +15,18 @@ getHelpEmbed = () => {
   return new Discord.MessageEmbed()
     .setTitle("Commands")
     .addField("!ping", "A command just for testing")
-    .addField("!chong", "A command 34an 5atr zula")
+    .addField("!ching", "A command 34an 5atr zula")
     .addField(
       "!next_round",
       "Bot tells you the next round, start time and contest link"
+    )
+    .addField(
+      "!stalk <handle>",
+      "A command returns last 5 submission of the user"
+    )
+    .addField(
+      "!stalk <handle> <count>",
+      "A command returns last <count> submission of the user"
     );
 };
 
