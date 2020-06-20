@@ -1,6 +1,7 @@
 const { JSDOM } = require("jsdom");
 const { window } = new JSDOM("");
 const $ = require("jquery")(window);
+const atcoder = require("./Atcoder");
 
 const Discord = require("discord.js");
 const { data } = require("jquery");
@@ -91,26 +92,36 @@ class CommandHandler {
   static onMessage_help = (message, args) => {
     message.reply(getHelpEmbed());
   };
-  static onMessage_next_round = (message, args) => {
-    $.getJSON("https://codeforces.com/api/contest.list", (data) => {
-      if (data.status == "OK") {
-        data = data.result;
-        let next_contest = null;
-        let time = Number.MIN_SAFE_INTEGER;
-        data
-          .filter((element) => element.phase == "BEFORE")
-          .forEach((element) => {
-            if (element.relativeTimeSeconds > time)
-              (next_contest = element), (time = element.relativeTimeSeconds);
-          });
-        if (next_contest) {
-          time = getFormatedTime(-time);
-          message.reply(
-            `Next contest is ${next_contest.name} , starts in ${time.hour}:${time.minute}:${time.second}, https://codeforces.com/contests/${next_contest.id}`
-          );
-        } else message.reply("There is no available contests");
-      }
-    });
+  static onMessage_next_round = async (message, args) => {
+    if (args.length > 1) return message.reply("Invalid arguments");
+    if (args.length == 0) {
+      $.getJSON("https://codeforces.com/api/contest.list", (data) => {
+        if (data.status == "OK") {
+          data = data.result;
+          let next_contest = null;
+          let time = Number.MIN_SAFE_INTEGER;
+          data
+            .filter((element) => element.phase == "BEFORE")
+            .forEach((element) => {
+              if (element.relativeTimeSeconds > time)
+                (next_contest = element), (time = element.relativeTimeSeconds);
+            });
+          if (next_contest) {
+            time = getFormatedTime(-time);
+            message.reply(
+              `Next contest is ${next_contest.name} , starts in ${time.hour}:${time.minute}:${time.second}, https://codeforces.com/contests/${next_contest.id}`
+            );
+          } else message.reply("There is no available contests");
+        }
+      });
+    } else {
+      if (args[0] == "atcoder") {
+        const contest = await atcoder.getUpcomingContest();
+        message.reply(
+          `Next contest is ${contest.contestName} , starts in ${contest.startTime}, ${contest.link}`
+        );
+      } else message.reply(`invalid online judge`);
+    }
   };
   static onMessage_stalk = (message, args) => {
     if (args.length != 1 && args.length != 2)

@@ -12,6 +12,11 @@
   "dependencies": {
     "discord.js": "^12.2.0",
     "jquery": "^3.5.1",
-    "jsdom": "^16.2.2"
+    "jsdom": "^16.2.2",
+    "os": "^0.1.1",
+    "puppeteer": "^4.0.0",
+    "puppeteer-extra": "^3.1.9",
+    "puppeteer-extra-plugin-stealth": "^2.4.9",
+    "user-agents": "^1.0.559"
   }
 }
