@@ -14,7 +14,6 @@ const getChromiumExecPath = () => {
 const startBrowser = async () => {
   //   puppeteer.use(StealthPlugin());
   browser = await puppeteer.launch({
-    executablePath: getChromiumExecPath(),
     headless: true,
   });
 };

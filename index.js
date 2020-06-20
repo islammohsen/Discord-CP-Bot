@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const CommandHandler = require("./command-Handler");
-
+require("dotenv").config();
+console.log(process.env.token);
 const bot = new Discord.Client();
 bot.login(process.env.token);
 
