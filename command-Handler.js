@@ -19,7 +19,11 @@ getHelpEmbed = () => {
     .addField("!ching", "A command 34an 5atr zula")
     .addField(
       "!next_round",
-      "Bot tells you the next round, start time and contest link"
+      "Bot tells you the next round on codeforces, start time and contest link"
+    )
+    .addField(
+      "!next_round atcoder",
+      "Bot tells you the next round on atcoder, start time and contest link"
     )
     .addField(
       "!stalk <handle>",
