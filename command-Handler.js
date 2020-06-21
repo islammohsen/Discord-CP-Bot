@@ -6,6 +6,7 @@ const atcoder = require("./Atcoder");
 
 const Discord = require("discord.js");
 const { data } = require("jquery");
+const Codechef = require("./Codechef");
 const bot = new Discord.Client();
 bot.login(process.env.token);
 
@@ -124,6 +125,11 @@ class CommandHandler {
         const contest = await atcoder.getUpcomingContest();
         message.reply(
           `Next contest is ${contest.contestName} , starts in ${contest.startTime}, ${contest.link}`
+        );
+      } else if (args[0] == "codechef") {
+        const contest = await Codechef.getUpcomingContest();
+        message.reply(
+          `Next contest is ${contest.contestName}, starts in ${contest.time.days} days, ${contest.time.hours} hours, ${contest.time.mins} mins, ${contest.time.secs} secs, ${contest.link}`
         );
       } else message.reply(`invalid online judge`);
     }
